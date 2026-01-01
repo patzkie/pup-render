@@ -10,8 +10,6 @@ app.listen(PORT, () => {
 const app = express();
 app.use(express.json());
 
-const delay = ms => new Promise(res => setTimeout(res, ms));
-
 app.post('/run', async (req, res) => {
     const { origin, destination } = req.body;
     let routeRows = [];
