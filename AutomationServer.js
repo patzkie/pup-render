@@ -1,5 +1,7 @@
 const express = require('express');
 const puppeteer = require('puppeteer');
+require("dotenv").config
+
 
 const PORT = process.env.PORT || 3000;
 
@@ -8,6 +10,7 @@ app.listen(PORT, () => {
 });
 
 const app = express();
+
 app.use(express.json());
 
 app.post('/run', async (req, res) => {
@@ -16,14 +19,19 @@ app.post('/run', async (req, res) => {
     console.log("Received:", origin, destination);
 
     const browser = await puppeteer.launch({
-        headless: "new", // or true
+        executablePath:
+            process.env.NODE_ENV === "production"
+                ? process.env.PUPPETEER_EXECUTABLE_PATH
+                : puppeteer.executablePath(),
+
         args: [
-            "--no-sandbox",
+
             "--disable-setuid-sandbox",
-            "--disable-dev-shm-usage",
-            "--disable-gpu"
+            "--no-sandbox",
+            "--single-process",
+            "--no-zygote",
         ],
-        defaultViewport: null,
+
     });
 
     const page = await browser.newPage();
